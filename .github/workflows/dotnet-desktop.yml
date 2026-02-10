@@ -255,15 +255,26 @@ jobs:
     - name: Create Release Packages
       run: |
         mkdir -p release-package
+        
+        # Package Windows
         cd artifacts/windows-x64
         zip -r ../../release-package/N64RecompLauncher-Windows-x64.zip .
-        cd ../linux-x64
+        cd ../..
+        
+        # Package Linux x64
+        cd artifacts/linux-x64
         tar -czf ../../release-package/N64RecompLauncher-Linux-x64.tar.gz .
-        cd ../linux-arm64
+        cd ../..
+        
+        # Package Linux ARM64
+        cd artifacts/linux-arm64
         tar -czf ../../release-package/N64RecompLauncher-Linux-ARM64.tar.gz .
-        cd ../macos-x64
-        # For macOS, zip the .app bundle
-        zip -r ../../release-package/N64RecompLauncher-macOS-x64.zip N64RecompLauncher.app
+        cd ../..
+        
+        # Package macOS - zip the entire .app bundle directory
+        cd artifacts/macos-x64
+        zip -r ../../release-package/N64RecompLauncher-macOS-x64.zip .
+        cd ../..
 
     - name: Upload Combined Release
       uses: actions/upload-artifact@v4

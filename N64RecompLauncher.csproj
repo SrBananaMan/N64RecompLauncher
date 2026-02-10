@@ -30,4 +30,8 @@
 		<AvaloniaResource Include="Assets/**" />
 		<AvaloniaResource Include="Assets/Icons/**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include=".github\workflows\dotnet-desktop-fixed.yml" />
+	</ItemGroup>
 </Project>
