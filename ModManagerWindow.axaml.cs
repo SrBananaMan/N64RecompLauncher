@@ -463,6 +463,26 @@ namespace N64RecompLauncher
         {
             _ = LoadModsAsync();
         }
+        private void OpenModsFolder_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (_game != null)
+            {
+                try { 
+                    string folderPath = GetGameModsPath(_settings.IsPortable);
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    OpenUrl(folderPath);
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = "Failed to open folder: {ex.Message}";
+                }
+            }
+        }
 
         private async void UpdateAll_Click(object sender, RoutedEventArgs e)
         {

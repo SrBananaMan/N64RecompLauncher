@@ -113,6 +113,7 @@ jobs:
     
     env:
       Solution_Name: N64RecompLauncher.sln
+      APP_NAME: N64RecompLauncher
 
     steps:
     - name: Checkout
@@ -131,11 +132,94 @@ jobs:
     - name: Publish macOS x64
       run: dotnet publish ${{ env.Solution_Name }} -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false -o publish/osx-x64
 
-    - name: Upload macOS x64
+    - name: Install iconutil (for converting PNG to ICNS)
+      run: |
+        brew install imagemagick
+
+    - name: Convert Icon to ICNS
+      run: |
+        # Create iconset directory
+        mkdir -p Icon.iconset
+        
+        # Generate different icon sizes using ImageMagick
+        magick Icon/icon.png -resize 16x16 Icon.iconset/icon_16x16.png
+        magick Icon/icon.png -resize 32x32 Icon.iconset/icon_16x16@2x.png
+        magick Icon/icon.png -resize 32x32 Icon.iconset/icon_32x32.png
+        magick Icon/icon.png -resize 64x64 Icon.iconset/icon_32x32@2x.png
+        magick Icon/icon.png -resize 128x128 Icon.iconset/icon_128x128.png
+        magick Icon/icon.png -resize 256x256 Icon.iconset/icon_128x128@2x.png
+        magick Icon/icon.png -resize 256x256 Icon.iconset/icon_256x256.png
+        magick Icon/icon.png -resize 512x512 Icon.iconset/icon_256x256@2x.png
+        magick Icon/icon.png -resize 512x512 Icon.iconset/icon_512x512.png
+        magick Icon/icon.png -resize 1024x1024 Icon.iconset/icon_512x512@2x.png
+        
+        # Convert iconset to icns
+        iconutil -c icns Icon.iconset -o ${{ env.APP_NAME }}.icns
+
+    - name: Create macOS App Bundle
+      run: |
+        # Create app bundle structure
+        APP_DIR="publish/osx-x64/${{ env.APP_NAME }}.app"
+        mkdir -p "$APP_DIR/Contents/MacOS"
+        mkdir -p "$APP_DIR/Contents/Resources"
+        
+        # Move executable and all dependencies to MacOS folder
+        mv publish/osx-x64/* "$APP_DIR/Contents/MacOS/" 2>/dev/null || true
+        
+        # Copy icon
+        cp ${{ env.APP_NAME }}.icns "$APP_DIR/Contents/Resources/"
+        
+        # Create Info.plist
+        cat > "$APP_DIR/Contents/Info.plist" << EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleName</key>
+            <string>${{ env.APP_NAME }}</string>
+            <key>CFBundleDisplayName</key>
+            <string>N64 Recomp Launcher</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.n64recomp.launcher</string>
+            <key>CFBundleVersion</key>
+            <string>1.0.0</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0.0</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleSignature</key>
+            <string>????</string>
+            <key>CFBundleExecutable</key>
+            <string>${{ env.APP_NAME }}</string>
+            <key>CFBundleIconFile</key>
+            <string>${{ env.APP_NAME }}</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>10.15</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+            <key>NSSupportsAutomaticGraphicsSwitching</key>
+            <true/>
+        </dict>
+        </plist>
+        EOF
+        
+        # Make executable
+        chmod +x "$APP_DIR/Contents/MacOS/${{ env.APP_NAME }}"
+        
+        # Create a launcher script if needed (for debugging)
+        cat > "$APP_DIR/Contents/MacOS/launcher.sh" << 'EOF'
+        #!/bin/bash
+        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        cd "$DIR"
+        ./${{ env.APP_NAME }} "$@"
+        EOF
+        chmod +x "$APP_DIR/Contents/MacOS/launcher.sh"
+
+    - name: Upload macOS App Bundle
       uses: actions/upload-artifact@v4
       with:
         name: N64RecompLauncher-macOS-x64
-        path: publish/osx-x64
+        path: publish/osx-x64/${{ env.APP_NAME }}.app
         retention-days: 30
 
   package-release:
@@ -178,7 +262,8 @@ jobs:
         cd ../linux-arm64
         tar -czf ../../release-package/N64RecompLauncher-Linux-ARM64.tar.gz .
         cd ../macos-x64
-        tar -czf ../../release-package/N64RecompLauncher-macOS-x64.tar.gz .
+        # For macOS, zip the .app bundle
+        zip -r ../../release-package/N64RecompLauncher-macOS-x64.zip N64RecompLauncher.app
 
     - name: Upload Combined Release
       uses: actions/upload-artifact@v4
