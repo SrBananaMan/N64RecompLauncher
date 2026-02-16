@@ -939,13 +939,11 @@
 				<Image x:Name="CustomBackgroundImage"
 					anim:ImageBehavior.AnimatedSource="{Binding BackgroundImageUri}"
 					Stretch="Fill"
-					Opacity="0.15"
-					IsVisible="{Binding !IsBackgroundImageStatic}"/>
+					Opacity="0.15"/>
 				<Image x:Name="StaticBackgroundImage"
 					Source="{Binding BackgroundImageUri}"
 					Stretch="Fill"
-					Opacity="0.15"
-					IsVisible="{Binding IsBackgroundImageStatic}"/>
+					Opacity="0.15"/>
 
 				<!-- Main Game List -->
 				<ScrollViewer VerticalScrollBarVisibility="Auto" x:Name="GameScrollViewer" Margin="30,20,30,30">

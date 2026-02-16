@@ -35,19 +35,6 @@ namespace N64RecompLauncher
         public string IconFillStretch = "Uniform";
         private string _backgroundImagePath;
         private string _backgroundImageUri;
-        private bool _isBackgroundImageStatic;
-        public bool IsBackgroundImageStatic
-        {
-            get => _isBackgroundImageStatic;
-            set
-            {
-                if (_isBackgroundImageStatic != value)
-                {
-                    _isBackgroundImageStatic = value;
-                    OnPropertyChanged(nameof(IsBackgroundImageStatic));
-                }
-            }
-        }
         public string BackgroundImagePath
         {
             get => _backgroundImagePath;
@@ -280,15 +267,6 @@ namespace N64RecompLauncher
 
             // Initialize background image from settings
             BackgroundImagePath = _settings?.BackgroundImagePath ?? string.Empty;
-            if (!string.IsNullOrEmpty(BackgroundImagePath) && File.Exists(BackgroundImagePath))
-            {
-                string extension = Path.GetExtension(BackgroundImagePath).ToLower();
-                IsBackgroundImageStatic = extension != ".gif";
-            }
-            else
-            {
-                IsBackgroundImageStatic = true;
-            }
 
             // Initialize music from settings
             LauncherMusicPath = _settings?.LauncherMusicPath ?? string.Empty;
