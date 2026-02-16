@@ -34,18 +34,7 @@ namespace N64RecompLauncher
         private bool isSettingsPanelOpen = false;
         public string IconFillStretch = "Uniform";
         private string _backgroundImagePath;
-        public string BackgroundImagePath 
-        { 
-            get => _backgroundImagePath; 
-            set
-            {
-                if (_backgroundImagePath != value)
-                {
-                    _backgroundImagePath = value;
-                    OnPropertyChanged(nameof(BackgroundImagePath));
-                }
-            }
-        }
+        private string _backgroundImageUri;
         private bool _isBackgroundImageStatic;
         public bool IsBackgroundImageStatic
         {
@@ -59,6 +48,28 @@ namespace N64RecompLauncher
                 }
             }
         }
+        public string BackgroundImagePath
+        {
+            get => _backgroundImagePath;
+            set
+            {
+                if (_backgroundImagePath != value)
+                {
+                    _backgroundImagePath = value;
+                    if (!string.IsNullOrEmpty(value) && File.Exists(value))
+                    {
+                        _backgroundImageUri = new Uri(value).AbsoluteUri;
+                    }
+                    else
+                    {
+                        _backgroundImageUri = string.Empty;
+                    }
+                    OnPropertyChanged(nameof(BackgroundImagePath));
+                    OnPropertyChanged(nameof(BackgroundImageUri));
+                }
+            }
+        }
+        public string BackgroundImageUri => _backgroundImageUri ?? string.Empty;
         private System.Threading.CancellationTokenSource? _fadeTaskCts;
         private const int FADE_DURATION_MS = 500;
         #if WINDOWS
@@ -269,10 +280,14 @@ namespace N64RecompLauncher
 
             // Initialize background image from settings
             BackgroundImagePath = _settings?.BackgroundImagePath ?? string.Empty;
-            if (!string.IsNullOrEmpty(BackgroundImagePath))
+            if (!string.IsNullOrEmpty(BackgroundImagePath) && File.Exists(BackgroundImagePath))
             {
                 string extension = Path.GetExtension(BackgroundImagePath).ToLower();
                 IsBackgroundImageStatic = extension != ".gif";
+            }
+            else
+            {
+                IsBackgroundImageStatic = true;
             }
 
             // Initialize music from settings
@@ -2560,9 +2575,6 @@ namespace N64RecompLauncher
                 var selectedFile = file[0];
                 BackgroundImagePath = selectedFile.Path.LocalPath;
                 _settings.BackgroundImagePath = BackgroundImagePath;
-
-                string extension = Path.GetExtension(BackgroundImagePath).ToLower();
-                IsBackgroundImageStatic = extension != ".gif";
 
                 AppSettings.Save(_settings);
             }
