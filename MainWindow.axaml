@@ -939,11 +939,11 @@
 				<Image x:Name="CustomBackgroundImage"
 					anim:ImageBehavior.AnimatedSource="{Binding BackgroundImageUri}"
 					Stretch="Fill"
-					Opacity="0.15"/>
+					Opacity="{Binding BackgroundOpacity}"/>
 				<Image x:Name="StaticBackgroundImage"
 					Source="{Binding BackgroundImageUri}"
 					Stretch="Fill"
-					Opacity="0.15"/>
+					Opacity="{Binding BackgroundOpacity}"/>
 
 				<!-- Main Game List -->
 				<ScrollViewer VerticalScrollBarVisibility="Auto" x:Name="GameScrollViewer" Margin="30,20,30,30">
@@ -1224,6 +1224,12 @@
 											   Foreground="{DynamicResource ThemeTextSecondary}"
 											   Margin="0,0,0,8"/>
 
+									<TextBlock Text="Set a custom background image (PNG, JPG, GIF supported)"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Margin="0,0,0,20"
+											   TextWrapping="Wrap"/>
+
 									<Button Classes="options"
 											Content="Select Image"
 											HorizontalAlignment="Stretch"
@@ -1233,20 +1239,37 @@
 									<Button Classes="options"
 											Content="Clear Background"
 											HorizontalAlignment="Stretch"
-											Margin="0,0,0,8"
+											Margin="0,0,0,16"
 											Click="ClearBackgroundImage_Click"
 											IsEnabled="{Binding BackgroundImagePath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
-									<TextBlock Text="Set a custom background image (PNG, JPG, GIF supported)"
+									<TextBlock Text="Background Opacity"
+											   FontSize="13"
+											   Foreground="{DynamicResource ThemeTextSecondary}"/>
+
+									<TextBlock Text="{Binding ElementName=BackgroundOpacitySlider, Path=Value, StringFormat={}{0:F2}}"
 											   FontSize="12"
-											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,20"
-											   TextWrapping="Wrap"/>
+											   Foreground="{DynamicResource ThemeTextSecondary}"/>
+
+									<Slider x:Name="BackgroundOpacitySlider"
+											Minimum="0"
+											Maximum="1"
+											Value="{Binding BackgroundOpacity}"
+											TickFrequency="0.01"
+											IsSnapToTickEnabled="True"
+											ValueChanged="BackgroundOpacitySlider_ValueChanged"
+											Margin="0,0,0,20"/>
 
 									<TextBlock Text="Launcher Music"
 											   FontSize="13"
 											   FontWeight="SemiBold"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Margin="0,0,0,8"/>
+
+									<TextBlock Text="Looping background music (MP3, WAV, OGG supported)"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   TextWrapping="Wrap"
 											   Margin="0,0,0,8"/>
 
 									<Button Classes="options"
@@ -1258,14 +1281,17 @@
 									<Button Classes="options"
 											Content="Clear Music"
 											HorizontalAlignment="Stretch"
-											Margin="0,0,0,8"
+											Margin="0,0,0,20"
 											Click="ClearLauncherMusic_Click"
 											IsEnabled="{Binding LauncherMusicPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
 									<TextBlock Text="Music Volume"
 											   FontSize="13"
-											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,0"/>
+											   Foreground="{DynamicResource ThemeTextSecondary}"/>
+									
+									<TextBlock Text="{Binding ElementName=MusicVolumeSlider, Path=Value, StringFormat={}{0:F2}}"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"/>
 
 									<Slider x:Name="MusicVolumeSlider"
 											Minimum="0"
@@ -1273,13 +1299,8 @@
 											Value="{Binding MusicVolume}"
 											TickFrequency="0.01"
 											IsSnapToTickEnabled="True"
-											ValueChanged="MusicVolumeSlider_ValueChanged"/>
-
-									<TextBlock Text="Looping background music (MP3, WAV, OGG supported)"
-											   FontSize="12"
-											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,20"
-											   TextWrapping="Wrap"/>
+											ValueChanged="MusicVolumeSlider_ValueChanged"
+											Margin="0,0,0,20"/>
 
 									<TextBlock Text="Slot Scale"
 											   FontSize="13"

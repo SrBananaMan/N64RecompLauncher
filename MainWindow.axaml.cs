@@ -57,6 +57,18 @@ namespace N64RecompLauncher
             }
         }
         public string BackgroundImageUri => _backgroundImageUri ?? string.Empty;
+        public float BackgroundOpacity
+        {
+            get => _settings.BackgroundOpacity;
+            set
+            {
+                if (Math.Abs(_settings.BackgroundOpacity - value) > 0.001f)
+                {
+                    _settings.BackgroundOpacity = value;
+                    OnPropertyChanged(nameof(BackgroundOpacity));
+                }
+            }
+        }
         private System.Threading.CancellationTokenSource? _fadeTaskCts;
         private const int FADE_DURATION_MS = 500;
         #if WINDOWS
@@ -1398,6 +1410,9 @@ namespace N64RecompLauncher
                 if (ShowExperimentalCheckBox != null)
                     ShowExperimentalCheckBox.IsChecked = _settings.ShowExperimentalGames;
 
+                if (BackgroundOpacitySlider != null)
+                    BackgroundOpacitySlider.Value = _settings.BackgroundOpacity;
+
                 if (SortByComboBox != null)
                 {
                     var savedSort = _settings.SortBy ?? "Name";
@@ -2563,6 +2578,16 @@ namespace N64RecompLauncher
             BackgroundImagePath = string.Empty;
             _settings.BackgroundImagePath = string.Empty;
             AppSettings.Save(_settings);
+        }
+
+        private void BackgroundOpacitySlider_ValueChanged(object sender, Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            if (sender is Slider slider)
+            {
+                BackgroundOpacity = (float)slider.Value;
+                _settings.BackgroundOpacity = BackgroundOpacity;
+                AppSettings.Save(_settings);
+            }
         }
 
         private async void SelectLauncherMusic_Click(object sender, RoutedEventArgs e)
