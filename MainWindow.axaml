@@ -674,7 +674,7 @@
 				</Grid.RowDefinitions>
 
 				<!-- Logo/Header -->
-				<StackPanel Grid.Row="0" Margin="20,30,20,30">
+				<StackPanel Grid.Row="0" Margin="20">
 					<Image anim:ImageBehavior.AnimatedSource="avares://N64RecompLauncher/Assets/icon.gif"
 											Width="80"
 											Height="80"
@@ -760,7 +760,7 @@
 				</StackPanel>
 
 				<!-- Display Filters -->
-				<StackPanel Grid.Row="2" Margin="12,0,12,0">
+				<StackPanel Grid.Row="2" Margin="12,4,12,4">
 
 					<Border Height="1" Background="{DynamicResource ThemeBorder}" Margin="-12,0,-12,15"/>
 					
@@ -816,7 +816,7 @@
 				</StackPanel>
 				
 				<!-- Footer Links -->
-				<StackPanel Grid.Row="3" Margin="12,0,12,20">
+				<StackPanel Grid.Row="3" Margin="12,4,12,4">
 					<Border Height="1" Background="{DynamicResource ThemeBorder}" Margin="-12,0,-12,15"/>
 					<Button Classes="iconbutton"
 							Width="216"
