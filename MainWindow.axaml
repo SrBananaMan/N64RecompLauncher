@@ -6,7 +6,7 @@
 		xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
         Title="N64Recomp Launcher"
 		Width="1280" Height="720"
-        Background="Transparent"
+        Background="{Binding WindowBackground}"
 		WindowState="Normal"
         WindowStartupLocation="CenterScreen"
 		SystemDecorations="None">
@@ -912,6 +912,16 @@
 								   Foreground="{DynamicResource ThemeText}"
 								   FontSize="14"/>
 
+							<!-- Minimize Button -->
+							<Button Classes="modern-icon"
+									Width="28"
+									Margin="10,0,0,0"
+									Click="MinimizeButton_Click">
+								<Image Width="28" 
+									   Height="28" 
+									   Source="avares://N64RecompLauncher/Assets/Icons/button_minimize.png"/>
+							</Button>
+
 							<!-- Fullscreen Button -->
 							<Button Classes="modern-icon"
 									Width="28"
@@ -1005,7 +1015,6 @@
 									<CheckBox x:Name="PortableCheckBox"
 											   Content="Portable Mode"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,8"
 											   Checked="PortableCheckBox_Checked"
 											   Unchecked="PortableCheckBox_Unchecked" />
 
@@ -1017,7 +1026,6 @@
 									<CheckBox x:Name="ShowExperimentalCheckBox"
 											   Content="Show Experimental Games"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,8"
 											   Checked="ShowExperimentalCheckBox_Checked"
 											   Unchecked="ShowExperimentalCheckBox_Unchecked" />
 
@@ -1029,7 +1037,6 @@
 									<CheckBox x:Name="ShowCustomGamesCheckBox"
 											   Content="Show Custom Games"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,8"
 											   Checked="ShowCustomGamesCheckBox_Checked"
 											   Unchecked="ShowCustomGamesCheckBox_Unchecked" />
 
@@ -1041,11 +1048,21 @@
 									<CheckBox x:Name="EnableGamepadCheckBox"
 											  Content="Enable Gamepad Input"
 											  Foreground="{DynamicResource ThemeTextSecondary}"
-											  Margin="0,0,0,8"
 											  Checked="EnableGamepadCheckBox_Checked"
 											  Unchecked="EnableGamepadCheckBox_Unchecked" />
 
 									<TextBlock Text="Allow gamepad/controller navigation in the launcher"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Margin="0,0,0,8"/>
+									
+									<CheckBox x:Name="RoundWindowCornersCheckBox"
+											   Content="Rounded Window Corners"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Checked="RoundWindowCornersCheckBox_Checked"
+											   Unchecked="RoundWindowCornersCheckBox_Unchecked" />
+
+									<TextBlock Text="Round the corners of the launcher window"
 											   FontSize="12"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
 											   Margin="0,0,0,25"/>

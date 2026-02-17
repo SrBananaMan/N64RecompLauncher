@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -125,6 +124,21 @@ namespace N64RecompLauncher
                     _settings.StartFullscreen = value;
                     OnPropertyChanged(nameof(IsFullscreen));
                 }
+            }
+        }
+        public IBrush WindowBackground
+        {
+            get
+            {
+                if (_settings?.WindowBorderRounding ?? false)
+                {
+                    if (IsFullscreen)
+                    {
+                        return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
+                    }
+                    return Brushes.Transparent;
+                }
+                return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
             }
         }
         private string _currentSortBy = "Name";
@@ -357,6 +371,8 @@ namespace N64RecompLauncher
                         ? BlendColors(Color.FromRgb(70, 70, 70), secondaryColor, 0.15)
                         : BlendColors(Color.FromRgb(200, 200, 200), secondaryColor, 0.15)
                 );
+
+                OnPropertyChanged(nameof(WindowBackground));
             }
         }
 
@@ -1027,6 +1043,12 @@ namespace N64RecompLauncher
             {
                 WindowState = WindowState.Normal;
             }
+            OnPropertyChanged(nameof(WindowBackground));
+        }
+
+        public void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
 
         public void LayoutPreset_Landscape_Click(object sender, RoutedEventArgs e)
@@ -1484,6 +1506,9 @@ namespace N64RecompLauncher
                 if (StartFullscreenCheckBox != null)
                     StartFullscreenCheckBox.IsChecked = _settings.StartFullscreen;
 
+                if (RoundWindowCornersCheckBox != null)
+                    RoundWindowCornersCheckBox.IsChecked = _settings.WindowBorderRounding;
+
                 if (EnableGamepadCheckBox != null)
                     EnableGamepadCheckBox.IsChecked = _settings.EnableGamepadInput;
 
@@ -1530,6 +1555,28 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.StartFullscreen = false;
+                OnSettingChanged();
+            }
+        }
+
+        private void RoundWindowCornersCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_settings != null)
+            {
+                _settings.WindowBorderRounding = true;
+                ApplyRoundedCorners();
+                OnPropertyChanged(nameof(WindowBackground));
+                OnSettingChanged();
+            }
+        }
+
+        private void RoundWindowCornersCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_settings != null)
+            {
+                _settings.WindowBorderRounding = false;
+                ApplyRoundedCorners();
+                OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
         }

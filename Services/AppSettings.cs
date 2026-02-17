@@ -16,6 +16,7 @@ namespace N64RecompLauncher
         public int IconMargin { get; set; } = 8;
         public int SlotTextMargin { get; set; } = 112;
         public int SlotSize { get; set; } = 208;
+        public bool WindowBorderRounding { get; set; } = true;
         public string PrimaryColor { get; set; } = "#18181b";
         public string SecondaryColor { get; set; } = "#404040";
         public TargetOS Platform { get; set; } = TargetOS.Auto;
