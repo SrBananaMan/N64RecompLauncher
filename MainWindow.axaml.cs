@@ -827,6 +827,49 @@ namespace N64RecompLauncher
             IsContinueVisible = ContinueGameInfo != null;
         }
 
+        private void TopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // Skip if Hovering ComboBox
+            var source = e.Source as Control;
+            if (IsDescendantOf(source, SortByComboBox))
+            {
+                return;
+            }
+
+            var point = e.GetCurrentPoint(this);
+
+            if (point.Properties.IsLeftButtonPressed)
+            {
+                if (e.ClickCount == 2)
+                {
+                    // Double-click to maximize/restore
+                    WindowState = WindowState == WindowState.Maximized
+                        ? WindowState.Normal
+                        : WindowState.Maximized;
+                }
+                else
+                {
+                    // Single-click drag to move
+                    BeginMoveDrag(e);
+                }
+            }
+        }
+
+        private bool IsDescendantOf(Control? control, Control? parent)
+        {
+            if (control == null || parent == null)
+                return false;
+
+            while (control != null)
+            {
+                if (control == parent)
+                    return true;
+                control = control.Parent as Control;
+            }
+
+            return false;
+        }
+
         private void LoadCurrentPlatform()
         {
             if (_settings != null)
@@ -894,6 +937,7 @@ namespace N64RecompLauncher
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
+            ApplyRoundedCorners();
             _ = InitializeGamesAsync();
         }
 
@@ -3711,6 +3755,31 @@ namespace N64RecompLauncher
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void ApplyRoundedCorners()
+        {
+            if (!OperatingSystem.IsWindows())
+                return;
+
+            try
+            {
+                var hwnd = this.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+                if (hwnd != IntPtr.Zero)
+                {
+                    const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+                    int DWMWCP_ROUND = 2;
+
+                    DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref DWMWCP_ROUND, sizeof(int));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to apply rounded corners: {ex.Message}");
+            }
+        }
+
+        [DllImport("dwmapi.dll", SetLastError = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
     }
 
     public class MarkdownBlock

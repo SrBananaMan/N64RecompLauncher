@@ -6,9 +6,10 @@
 		xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
         Title="N64Recomp Launcher"
 		Width="1280" Height="720"
-        Background="{DynamicResource ThemeDarker}"
+        Background="Transparent"
 		WindowState="Normal"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+		SystemDecorations="None">
 
 	<Window.Resources>
 		<local:BooleanToStretchConverter x:Key="BooleanToStretchConverter"/>
@@ -657,6 +658,7 @@
 
 </Window.Styles>
 
+<Border CornerRadius="24" ClipToBounds="True" Background="Transparent">
 	<Grid x:Name="MainGrid">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="240"/>
@@ -867,7 +869,8 @@
 					BorderBrush="{DynamicResource ThemeBorder}"
 					BorderThickness="0,0,0,1"
 					Padding="0,8,0,8"
-					ZIndex="1">
+					ZIndex="1"
+					PointerPressed="TopBar_PointerPressed">
 				<Grid VerticalAlignment="Top">
 					<TextBlock x:Name="HeaderTitleText"
 							   Text="Library"
@@ -936,6 +939,7 @@
 			<Grid Grid.Row="1">
 
 				<!-- Background Image -->
+				<Border Background="{DynamicResource ThemeDarker}"/>
 				<Image x:Name="CustomBackgroundImage"
 					anim:ImageBehavior.AnimatedSource="{Binding BackgroundImageUri}"
 					Stretch="Fill"
@@ -1515,4 +1519,5 @@
 			</Grid>
 		</Grid>
 	</Grid>
+  </Border>
 </Window>
