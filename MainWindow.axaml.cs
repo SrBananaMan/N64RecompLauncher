@@ -17,6 +17,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Runtime.InteropServices;
+using Avalonia.Platform;
+
 #if WINDOWS
 using NAudio.Wave;
 #endif
@@ -136,7 +138,7 @@ namespace N64RecompLauncher
                     {
                         return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
                     }
-                    if (SystemDecorationsOptions == "Full")
+                    if (_settings.ShowOSTopBar)
                     {
                         return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
                     }
@@ -145,9 +147,10 @@ namespace N64RecompLauncher
                 return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
             }
         }
-        public string SystemDecorationsOptions
+        public bool ExtendClientAreaEnabled => !_settings.ShowOSTopBar;
+        public ExtendClientAreaChromeHints ChromeHints
         {
-            get => _settings.ShowOSTopBar ? "Full" : "None";
+            get => _settings.ShowOSTopBar ? ExtendClientAreaChromeHints.PreferSystemChrome : ExtendClientAreaChromeHints.NoChrome;
         }
         private string _currentSortBy = "Name";
         private bool _showExperimentalGames;
@@ -859,7 +862,7 @@ namespace N64RecompLauncher
             {
                 return;
             }
-            if (SystemDecorationsOptions == "Full")
+            if (_settings.ShowOSTopBar)
             {
                 return;
             }
@@ -1561,6 +1564,8 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.StartFullscreen = true;
+                OnPropertyChanged(nameof(IsFullscreen));
+                OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
         }
@@ -1570,6 +1575,8 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.StartFullscreen = false;
+                OnPropertyChanged(nameof(IsFullscreen));
+                OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
         }
@@ -1601,7 +1608,8 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.ShowOSTopBar = true;
-                OnPropertyChanged(nameof(SystemDecorationsOptions));
+                OnPropertyChanged(nameof(ExtendClientAreaEnabled));
+                OnPropertyChanged(nameof(ChromeHints));
                 OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
@@ -1612,7 +1620,8 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.ShowOSTopBar = false;
-                OnPropertyChanged(nameof(SystemDecorationsOptions));
+                OnPropertyChanged(nameof(ExtendClientAreaEnabled));
+                OnPropertyChanged(nameof(ChromeHints));
                 OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }

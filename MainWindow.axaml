@@ -9,7 +9,9 @@
         Background="{Binding WindowBackground}"
 		WindowState="Normal"
         WindowStartupLocation="CenterScreen"
-		SystemDecorations="{Binding SystemDecorationsOptions}">
+		SystemDecorations="Full"
+        ExtendClientAreaToDecorationsHint="{Binding ExtendClientAreaEnabled}"
+        ExtendClientAreaChromeHints="{Binding ChromeHints}">
 
 	<Window.Resources>
 		<local:BooleanToStretchConverter x:Key="BooleanToStretchConverter"/>
