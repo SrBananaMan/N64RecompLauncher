@@ -1564,8 +1564,6 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.StartFullscreen = true;
-                OnPropertyChanged(nameof(IsFullscreen));
-                OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
         }
@@ -1575,8 +1573,6 @@ namespace N64RecompLauncher
             if (_settings != null)
             {
                 _settings.StartFullscreen = false;
-                OnPropertyChanged(nameof(IsFullscreen));
-                OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }
         }
