@@ -136,10 +136,18 @@ namespace N64RecompLauncher
                     {
                         return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
                     }
+                    if (SystemDecorationsOptions == "Full")
+                    {
+                        return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
+                    }
                     return Brushes.Transparent;
                 }
                 return this.Resources["ThemeDarker"] as IBrush ?? Brushes.Transparent;
             }
+        }
+        public string SystemDecorationsOptions
+        {
+            get => _settings.ShowOSTopBar ? "Full" : "None";
         }
         private string _currentSortBy = "Name";
         private bool _showExperimentalGames;
@@ -845,9 +853,13 @@ namespace N64RecompLauncher
 
         private void TopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Skip if Hovering ComboBox
+            // Skip if Hovering ComboBox or if system decorations are enabled
             var source = e.Source as Control;
             if (IsDescendantOf(source, SortByComboBox))
+            {
+                return;
+            }
+            if (SystemDecorationsOptions == "Full")
             {
                 return;
             }
@@ -1479,6 +1491,9 @@ namespace N64RecompLauncher
                 if (BackgroundOpacitySlider != null)
                     BackgroundOpacitySlider.Value = _settings.BackgroundOpacity;
 
+                if (ShowOSTopBarCheckBox != null)
+                    ShowOSTopBarCheckBox.IsChecked = _settings.ShowOSTopBar;
+
                 if (SortByComboBox != null)
                 {
                     var savedSort = _settings.SortBy ?? "Name";
@@ -1576,6 +1591,28 @@ namespace N64RecompLauncher
             {
                 _settings.WindowBorderRounding = false;
                 ApplyRoundedCorners();
+                OnPropertyChanged(nameof(WindowBackground));
+                OnSettingChanged();
+            }
+        }
+
+        private void ShowOSTopBarCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_settings != null)
+            {
+                _settings.ShowOSTopBar = true;
+                OnPropertyChanged(nameof(SystemDecorationsOptions));
+                OnPropertyChanged(nameof(WindowBackground));
+                OnSettingChanged();
+            }
+        }
+
+        private void ShowOSTopBarCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_settings != null)
+            {
+                _settings.ShowOSTopBar = false;
+                OnPropertyChanged(nameof(SystemDecorationsOptions));
                 OnPropertyChanged(nameof(WindowBackground));
                 OnSettingChanged();
             }

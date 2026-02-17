@@ -9,7 +9,7 @@
         Background="{Binding WindowBackground}"
 		WindowState="Normal"
         WindowStartupLocation="CenterScreen"
-		SystemDecorations="None">
+		SystemDecorations="{Binding SystemDecorationsOptions}">
 
 	<Window.Resources>
 		<local:BooleanToStretchConverter x:Key="BooleanToStretchConverter"/>
@@ -1054,17 +1054,6 @@
 									<TextBlock Text="Allow gamepad/controller navigation in the launcher"
 											   FontSize="12"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,8"/>
-									
-									<CheckBox x:Name="RoundWindowCornersCheckBox"
-											   Content="Rounded Window Corners"
-											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Checked="RoundWindowCornersCheckBox_Checked"
-											   Unchecked="RoundWindowCornersCheckBox_Unchecked" />
-
-									<TextBlock Text="Round the corners of the launcher window"
-											   FontSize="12"
-											   Foreground="{DynamicResource ThemeTextSecondary}"
 											   Margin="0,0,0,25"/>
 
 									<TextBlock Text="Custom Games Path"
@@ -1218,14 +1207,35 @@
 									<CheckBox x:Name="StartFullscreenCheckBox"
 											   Content="Start in Fullscreen"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,8"
 											   Checked="StartFullscreenCheckBox_Checked"
 											   Unchecked="StartFullscreenCheckBox_Unchecked" />
 								
 									<TextBlock Text="Start the launcher in fullscreen mode"
 											   FontSize="12"
 											   Foreground="{DynamicResource ThemeTextSecondary}"
-											   Margin="0,0,0,20"/>
+											   Margin="0,0,0,8"/>
+									
+									<CheckBox x:Name="RoundWindowCornersCheckBox"
+											   Content="Rounded Window Corners"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Checked="RoundWindowCornersCheckBox_Checked"
+											   Unchecked="RoundWindowCornersCheckBox_Unchecked" />
+
+									<TextBlock Text="Round the corners of the launcher window"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Margin="0,0,0,8"/>
+
+									<CheckBox x:Name="ShowOSTopBarCheckBox"
+											   Content="Show OS TopBar"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Checked="ShowOSTopBarCheckBox_Checked"
+											   Unchecked="ShowOSTopBarCheckBox_Unchecked" />
+
+									<TextBlock Text="Show your OS' Top Bar"
+											   FontSize="12"
+											   Foreground="{DynamicResource ThemeTextSecondary}"
+											   Margin="0,0,0,25"/>
 
 									<CheckBox x:Name="UseGridViewCheckBox"
 											  Content="Grid View"
